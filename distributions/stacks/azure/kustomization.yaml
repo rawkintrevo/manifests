@@ -9,24 +9,24 @@ resources:
 - ../../../common/cert-manager/cert-manager-crds/base
 - ../../../common/cert-manager/cert-manager/overlays/self-signed
 # Istio (berndverst) upgraded this to istio 1.9.4
-- ./common/istio-1-9-4/istio-crds/base
-- ./common/istio-1-9-4/istio-namespace/base
-- ./common/istio-1-9-4/istio-install/base
+- ./istio-1-9-4/istio-crds/base
+- ./istio-1-9-4/istio-namespace/base
+- ./istio-1-9-4/istio-install/base
 # OIDC Authservice
 # (berndverst) Make sure to edit params.env and secret_params.env for your Azure Active Directory App Registration
-- ./common/oidc-authservice/
+- ./aad-auth-service/
 # KNative
 - ../../../common/knative/knative-serving-crds/base
 - ../../../common/knative/knative-serving-install/base
 - ../../../common/knative/knative-eventing-crds/base
 - ../../../common/knative/knative-eventing-install/base
-- ./common/istio-1-9-4/cluster-local-gateway/base
+- ./istio-1-9-4/cluster-local-gateway/base
 # Kubeflow namespace
 - ../../../common/kubeflow-namespace/base
 # Kubeflow Roles
 - ../../../common/kubeflow-roles/base
 # Kubeflow Istio Resources
-- ./common/istio-1-9-4/kubeflow-istio-resources/base
+- ./istio-1-9-4/kubeflow-istio-resources/base
 
 
 # Kubeflow Pipelines
@@ -66,5 +66,11 @@ resources:
 - ../../../common/user-namespace/base
 
 # Uncomment the line below if you want to use Azure MySQL
+# Make sure to edit the parameters in this folder.
 # (berndverst) Untested and not updated at the moment
-# - ./metadata
+# - ./azure-metadata-store
+
+# Uncomment the line below if you want to use Azure Blob Storage as Minio Object Storage
+# Make sure to edit the parameters in this folder.
+# (berndverst) Untested and not updated at the moment
+# - ./azure-object-store
