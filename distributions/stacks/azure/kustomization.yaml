@@ -1,66 +1,70 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
-namespace: kubeflow
+
+# You must currently use kustomize 3.2.0 - https://github.com/kubernetes-sigs/kustomize/releases/tag/v3.2.0
+
 resources:
-  - ../../admission-webhook/webhook/v3
-  - ../../kubeflow-roles/base
-  - ./application/jupyter-web-app
-  - ../../jupyter/notebook-controller/base_v3
-  - ../../profiles/base_v3
-  - ./application/spark-operator
-  - ./application/spartakus
-  - ./application/centraldashboard
-  # Training Operators
-  - ../../pytorch-job/pytorch-job-crds/overlays/application
-  - ../../pytorch-job/pytorch-operator/overlays/application
-  - ../../tf-training/tf-job-crds/overlays/application
-  - ../../tf-training/tf-job-operator/overlays/application
-  - ../../mxnet-job/mxnet-operator/overlays/application
-  - ../../mpi-job/mpi-operator/overlays/application
-  - ../../katib/installs/katib-standalone
-  # Pipeline
-  - ../../pipeline/minio/installs/generic
-  - ../../pipeline/mysql/installs/generic
-  - ../../pipeline/installs/generic
-  - ../../argo/base_v3
-  # Serving components
-  - ../../knative/installs/generic
-  - ../../kfserving/installs/generic
-  # Kubernetes resources - anonymous user
-  - ../../default-install/base
-  # Metadata
-  - ../../metadata/v3
-  # Uncomment the line below if you want to use Azure MySQL
-  # - ./metadata
-configMapGenerator:
-- name: workflow-controller-parameters
-  behavior: merge
-  literals:
-  - containerRuntimeExecutor=pns
-- name: kubeflow-config
-  envs:
-  - ./config/params.env
-vars:
-# We need to define vars at the top level otherwise we will get
-# conflicts.
-- fieldref:
-    fieldPath: data.clusterDomain
-  name: clusterDomain
-  objref:
-    apiVersion: v1
-    kind: ConfigMap
-    name: kubeflow-config
-- fieldref:
-    fieldPath: metadata.namespace
-  name: namespace
-  objref:
-    apiVersion: v1
-    kind: ConfigMap
-    name: kubeflow-config
-- fieldref:
-    fieldpath: metadata.namespace
-  name: katib-ui-namespace
-  objref:
-    kind: Service
-    name: katib-ui
-    apiVersion: v1
+# Cert-Manager
+- ../../../common/cert-manager/cert-manager-kube-system-resources/base
+- ../../../common/cert-manager/cert-manager-crds/base
+- ../../../common/cert-manager/cert-manager/overlays/self-signed
+# Istio (berndverst) upgraded this to istio 1.9.4
+- ./common/istio-1-9-4/istio-crds/base
+- ./common/istio-1-9-4/istio-namespace/base
+- ./common/istio-1-9-4/istio-install/base
+# OIDC Authservice
+# (berndverst) Make sure to edit params.env and secret_params.env for your Azure Active Directory App Registration
+- ./common/oidc-authservice/
+# KNative
+- ../../../common/knative/knative-serving-crds/base
+- ../../../common/knative/knative-serving-install/base
+- ../../../common/knative/knative-eventing-crds/base
+- ../../../common/knative/knative-eventing-install/base
+- ./common/istio-1-9-4/cluster-local-gateway/base
+# Kubeflow namespace
+- ../../../common/kubeflow-namespace/base
+# Kubeflow Roles
+- ../../../common/kubeflow-roles/base
+# Kubeflow Istio Resources
+- ./common/istio-1-9-4/kubeflow-istio-resources/base
+
+
+# Kubeflow Pipelines
+- ../../../apps/pipeline/upstream/env/platform-agnostic-multi-user-pns
+# KFServing
+- ../../../apps/kfserving/upstream/overlays/kubeflow
+# Katib
+- ../../../apps/katib/upstream/installs/katib-with-kubeflow
+# Central Dashboard
+- ../../../apps/centraldashboard/upstream/overlays/istio
+# Admission Webhook
+- ../../../apps/admission-webhook/upstream/overlays/cert-manager
+# Notebook Controller
+- ../../../apps/jupyter/jupyter-web-app/upstream/overlays/istio
+# Jupyter Web App
+- ../../../apps/jupyter/notebook-controller/upstream/overlays/kubeflow
+# Profiles + KFAM
+- ../../../apps/profiles/upstream/overlays/kubeflow
+# Volumes Web App
+- ../../../apps/volumes-web-app/upstream/overlays/istio
+# Tensorboards Web App
+- ../../../apps/tensorboard/tensorboard-controller/upstream/overlays/kubeflow
+# Tensorboard Controller
+- ../../../apps/tensorboard/tensorboards-web-app/upstream/overlays/istio
+# TFJob Operator
+- ../../../apps/tf-training/upstream/overlays/kubeflow
+# Pytorch Operator
+- ../../../apps/pytorch-job/upstream/overlays/kubeflow
+# MPI Operator
+- ../../../apps/mpi-job/upstream/overlays/kubeflow
+# MXNet Operator
+- ../../../apps/mxnet-job/upstream/overlays/kubeflow
+# XGBoost Operator
+- ../../../apps/xgboost-job/upstream/overlays/kubeflow
+
+# User namespace
+- ../../../common/user-namespace/base
+
+# Uncomment the line below if you want to use Azure MySQL
+# (berndverst) Untested and not updated at the moment
+# - ./metadata
