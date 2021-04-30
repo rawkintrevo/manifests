@@ -8,7 +8,6 @@ spec:
   template:
     spec:
       containers:
-      - $patch: replace
       - args:  
         - gateway
         - azure
@@ -33,7 +32,7 @@ spec:
             secretKeyRef:
               name: mlpipeline-minio-artifact
               key: azurestoragekey
-        volumeMounts:
-          $patch: delete
-      volumes:
-        $patch: delete
+#        volumeMounts:
+#          $patch: delete
+#      volumes:
+#        $patch: delete

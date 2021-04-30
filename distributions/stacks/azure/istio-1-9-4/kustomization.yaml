@@ -3,7 +3,7 @@ kind: Kustomization
 
 # You must currently use kustomize 3.2.0 - https://github.com/kubernetes-sigs/kustomize/releases/tag/v3.2.0
 
-# Only use this kustomizate file if you want to install Istio ahead of Kubeflow
+# Only use this kustomize file if you want to install Istio ahead of Kubeflow
 
 resources:
 - ./istio-crds/base
