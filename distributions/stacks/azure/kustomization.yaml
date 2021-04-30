@@ -12,6 +12,8 @@ resources:
 - ./istio-1-9-4/istio-crds/base
 - ./istio-1-9-4/istio-namespace/base
 - ./istio-1-9-4/istio-install/base
+# (berndverst) If you want to use a load balancer for your istio ingress, instead use:
+# ./istio-1-9-4/istio-install/enable-external-lb
 # OIDC Authservice
 # (berndverst) Make sure to edit params.env and secret_params.env for your Azure Active Directory App Registration
 - ./aad-auth-service/
