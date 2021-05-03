@@ -1,0 +1,14 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+# You must currently use kustomize 3.2.0 - https://github.com/kubernetes-sigs/kustomize/releases/tag/v3.2.0
+
+# Only use this kustomize file if you want to install Istio ahead of Kubeflow
+
+resources:
+- ./istio-crds/base
+- ./istio-namespace/base
+# uses external load balancer for istio ingress gateway
+- ./istio-install/enable-external-lb
+# if you want to use an internal node port use:
+# ./istio-install/base
